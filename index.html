@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Attendance Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      color: #333;
+    }
+    header {
+      background: #3f51b5;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      padding: 20px;
+      gap: 20px;
+    }
+    .sidebar {
+      background: #fff;
+      width: 200px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .sidebar h3 {
+      margin-top: 0;
+    }
+    .sidebar button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #3f51b5;
+      color: white;
+      cursor: pointer;
+    }
+    .sidebar button:hover {
+      background: #303f9f;
+    }
+    .main {
+      flex: 1;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .card {
+      background: #f9fafc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background: #f1f1f1;
+    }
+    canvas {
+      max-width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📊 Student Attendance Dashboard</h1>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      <h3>Menu</h3>
+      <button onclick="showSection('overview')">Overview</button>
+      <button onclick="showSection('attendance')">Attendance</button>
+    </div>
+
+    <div class="main">
+      <div id="overview" class="section">
+        <div class="card">
+          <h2>Total Students</h2>
+          <p id="totalStudents">50</p>
+        </div>
+        <div class="card">
+          <h2>Average Attendance</h2>
+          <p id="avgAttendance">85%</p>
+        </div>
+        <canvas id="attendanceChart"></canvas>
+      </div>
+
+      <div id="attendance" class="section" style="display:none;">
+        <h2>Attendance Table</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Days Present</th>
+              <th>Days Absent</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Demo data
+    const students = [
+      { name: "Aarav", present: 22, absent: 3 },
+      { name: "Priya", present: 20, absent: 5 },
+      { name: "Rohit", present: 25, absent: 0 },
+      { name: "Ananya", present: 23, absent: 2 },
+      { name: "Kabir", present: 18, absent: 7 },
+    ];
+
+    // Fill attendance table
+    const tableBody = document.getElementById("attendanceTable");
+    students.forEach(s => {
+      let row = `<tr>
+        <td>${s.name}</td>
+        <td>${s.present}</td>
+        <td>${s.absent}</td>
+      </tr>`;
+      tableBody.innerHTML += row;
+    });
+
+    // Chart.js - Attendance
+    const ctx = document.getElementById('attendanceChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: students.map(s => s.name),
+        datasets: [
+          {
+            label: 'Present',
+            data: students.map(s => s.present),
+            backgroundColor: '#4caf50'
+          },
+          {
+            label: 'Absent',
+            data: students.map(s => s.absent),
+            backgroundColor: '#f44336'
+          }
+        ]
+      },
+      options: { responsive: true }
+    });
+
+    // Section toggle
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.style.display = "none");
+      document.getElementById(id).style.display = "block";
+    }
+  </script>
+</body>
+</html>
